@@ -73,14 +73,14 @@ class ProductController extends Controller
                                                 <input required type="text" id="name" name="name" value="' . $row->name . '" class="form-control">
                                             </div>
                                             <div class="form-group">
-                                                <label>Base Price</label>
+                                                <label>Price</label>
                                                 <div class="input-group">
                                                     <span class="input-group-text">Rp.</span>
                                                     <input required type="number" name="price" value="' . $row->price . '" class="form-control">
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="pasword">Price</label>
+                                                <label for="pasword">Base Price</label>
                                                 <div class="input-group">
                                                     <span class="input-group-text">Rp.</span>
                                                     <input required type="number" id="base_price" value="' . $row->base_price . '" name="base_price" class="form-control">
@@ -116,14 +116,14 @@ class ProductController extends Controller
                                             <input disabled type="text" id="name" name="name" value="' . $row->name . '" class="form-control">
                                         </div>
                                         <div class="form-group">
-                                            <label>Base Price</label>
+                                            <label>Price</label>
                                             <div class="input-group">
                                                 <span class="input-group-text">Rp.</span>
                                                 <input disabled type="number" name="price" value="' . $row->price . '" class="form-control">
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="pasword">Price</label>
+                                            <label for="pasword">Base Price</label>
                                             <div class="input-group">
                                                 <span class="input-group-text">Rp.</span>
                                                 <input disabled type="number" id="base_price" value="' . $row->base_price . '" name="base_price" class="form-control">

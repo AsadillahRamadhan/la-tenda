@@ -9,8 +9,8 @@
                 <tr>
                     <th>No</th>
                     <th>Name</th>
-                    <th>Base Price</th>
                     <th>Price</th>
+                    <th>Base Price</th>
                     <th>Category</th>
                     <th>Action</th>
                 </tr>
@@ -32,14 +32,14 @@
                         <input required type="text" id="name" name="name" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label>Base Price</label>
+                        <label>Price</label>
                         <div class="input-group">
                             <span class="input-group-text">Rp.</span>
                             <input required type="number" id="price" name="price" class="form-control">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Price</label>
+                        <label>Base Price</label>
                         <div class="input-group">
                             <span class="input-group-text">Rp.</span>
                             <input required type="number" id="base_price" name="base_price" class="form-control">
@@ -85,14 +85,14 @@
                     searchable: true
                 },
                 {
-                    data: 'base_price',
-                    name: 'base_price',
+                    data: 'price',
+                    name: 'price',
                     orderable: true,
                     searchable: true
                 },
                 {
-                    data: 'price',
-                    name: 'price',
+                    data: 'base_price',
+                    name: 'base_price',
                     orderable: true,
                     searchable: true
                 },
