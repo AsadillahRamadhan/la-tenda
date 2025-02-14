@@ -17,7 +17,7 @@ class IsAdmin
     public function handle(Request $request, Closure $next): Response
     {
         if (Auth::user()->role != 'super_admin' && Auth::user()->role != 'admin') {
-            return redirect()->back();
+            return redirect()->route('transaction');
         }
         return $next($request);
     }

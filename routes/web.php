@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Middleware\IsAuthenticate;
@@ -22,8 +24,8 @@ Route::middleware(IsAuthenticate::class)->group(function () {
         });
     });
 
-
-
-    Route::post('logout', function () {})->name('logout');
+    Route::get('/', [TransactionController::class, 'index'])->name('transaction');
+    Route::post('/store_transaction', [TransactionController::class, 'store'])->name('transaction.store');
+    Route::get('logout', [LoginController::class, 'logout'])->name('get_logout');
 });
 Auth::routes();
