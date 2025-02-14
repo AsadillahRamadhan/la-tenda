@@ -8,41 +8,49 @@
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>Username</th>
                     <th>Name</th>
-                    <th>Role</th>
+                    <th>Base Price</th>
+                    <th>Price</th>
+                    <th>Category</th>
                     <th>Action</th>
                 </tr>
             </thead>
         </table>
     </div>
-    <form method="POST" onsubmit="submitForm(this, 'store')" action="{{ route('users.store') }}" class="modal fade"
+    <form method="POST" onsubmit="submitForm(this, 'store')" action="{{ route('products.store') }}" class="modal fade"
         id="createModal" tabindex="-1" aria-labelledby="modal" aria-hidden="true">
         @csrf
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Create User</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Create Product</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label for="username">Username</label>
-                        <input required type="text" name="username" id="username" class="form-control">
-                    </div>
                     <div class="form-group">
                         <label for="name">Name</label>
                         <input required type="text" id="name" name="name" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label for="pasword">Password</label>
-                        <input required type="text" id="password" name="password" class="form-control">
+                        <label>Base Price</label>
+                        <div class="input-group">
+                            <span class="input-group-text">Rp.</span>
+                            <input required type="number" id="price" name="price" class="form-control">
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="role">Role</label>
-                        <select name="role" id="role" class="form-control">
-                            <option value="user">User</option>
-                            <option value="admin">Admin</option>
+                        <label>Price</label>
+                        <div class="input-group">
+                            <span class="input-group-text">Rp.</span>
+                            <input required type="number" id="base_price" name="base_price" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <select name="category_id" id="category" class="form-control">
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -71,20 +79,26 @@
                     searchable: false
                 },
                 {
-                    data: 'username',
-                    name: 'username',
-                    orderable: true,
-                    searchable: true
-                },
-                {
                     data: 'name',
                     name: 'name',
                     orderable: true,
                     searchable: true
                 },
                 {
-                    data: 'role',
-                    name: 'role',
+                    data: 'base_price',
+                    name: 'base_price',
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: 'price',
+                    name: 'price',
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: 'category',
+                    name: 'category',
                     orderable: true,
                     searchable: true
                 },

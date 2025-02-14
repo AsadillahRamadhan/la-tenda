@@ -32,7 +32,8 @@
                 </li>
             @endif
             <li class="nav-item">
-                <a class="nav-link" href="{{ asset('/assets/pages/dashboard.html') }}">
+                <a class="nav-link {{ Request::is('dashboard/categories') ? 'active' : '' }}"
+                    href="{{ route('categories.index') }}">
                     <div
                         class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center fas fa-list">
                     </div>
@@ -40,7 +41,8 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ asset('/assets/pages/dashboard.html') }}">
+                <a class="nav-link {{ Request::is('dashboard/products') ? 'active' : '' }}"
+                    href="{{ route('products.index') }}">
                     <div
                         class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center fas fa-burger">
                     </div>
