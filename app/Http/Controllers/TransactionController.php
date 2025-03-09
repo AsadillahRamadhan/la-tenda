@@ -17,10 +17,13 @@ class TransactionController extends Controller
         $products = DB::table('products')
             ->join('categories', 'products.category_id', '=', 'categories.id')
             ->select('categories.name as category', 'products.name as name', 'products.price', 'products.id as id')
+            ->where('products.is_deleted', 0)
             ->get();
         $products = $products->groupBy('category');
+        $payment_methods = ['QRIS', 'Cash', 'BCA'];
         return view('transactions.index', [
             'products' => $products,
+            'payment_methods' => $payment_methods,
             'with_tax' => env('WITH_TAX') ? 'yes' : 'no'
         ]);
     }
@@ -32,7 +35,8 @@ class TransactionController extends Controller
                 'user_id' => Auth::user()->id,
                 'price' => 0,
                 'tax' => 0,
-                'total_price' => 0
+                'total_price' => 0,
+                'payment_method' => $request->post('payment_method')
             ]);
 
             foreach ($request->post('id') as $i => $id) {

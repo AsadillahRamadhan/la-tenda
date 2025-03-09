@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
@@ -18,6 +19,7 @@ Route::middleware(IsAuthenticate::class)->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
         Route::resource('products', ProductController::class);
         Route::resource('categories', CategoryController::class);
+        Route::resource('budgets', BudgetController::class);
 
         Route::middleware(IsSuperAdmin::class)->group(function () {
             Route::resource('users', UserController::class);

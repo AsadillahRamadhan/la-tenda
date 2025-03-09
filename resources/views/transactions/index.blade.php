@@ -87,6 +87,19 @@
                     <span id="total_price">Rp 0,00</span>
                 </div>
             </div>
+            <div class="grid grid-cols-12 text-slate-700 font-semibold mb-6">
+                <div class="col-span-8">
+                    Payment
+                </div>
+                <div class="col-span-4">
+                    <select name="payment_method" id="payment_method" class="form-control">
+                        @foreach ($payment_methods as $payment_method)
+                            <option value="{{ $payment_method }}">{{ $payment_method }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+            </div>
             <button type="submit"
                 class="w-full px-1 py-2 bg-orange-500 rounded-full text-white cursor-pointer">Order</button>
     </div>

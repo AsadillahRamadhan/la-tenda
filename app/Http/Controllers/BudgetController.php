@@ -2,55 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
-use App\Models\Product;
-use App\Models\ProductTransaction;
+use App\Models\Budget;
 use Exception;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
-class ProductController extends Controller
+class BudgetController extends Controller
 {
     private function idrFormat($number)
     {
         return "Rp " . number_format($number, 0, ',', '.');
     }
-
-    private function getCategoriesOptions($row, $categories)
-    {
-        $string = "";
-        foreach ($categories as $category) {
-            $string .= '<option value="' . $category->id . '" ' . ($row->category_id == $category->id ? 'selected' : '') . '>' . $category->name . '</option>';
-        }
-
-        return $string;
-    }
-
     public function index()
     {
-        $categories = Category::all();
         if (request()->ajax()) {
-            $data = Product::with('category')->where('is_deleted', 0)->get();
+            $data = Budget::all();
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->addColumn('name', function ($row) {
-                    return $row->name;
-                })
-                ->addColumn('base_price', function ($row) {
-                    return $this->idrFormat($row->base_price);
-                })
                 ->addColumn('price', function ($row) {
                     return $this->idrFormat($row->price);
                 })
-                ->addColumn('category', function ($row) {
-                    return $row->category->name;
+                ->addColumn('detail', function ($row) {
+                    return $row->detail;
+                })
+                ->addColumn('date', function ($row) {
+                    return $row->date;
                 })
                 ->addColumn('action', function ($row) {
-                    $categories = Category::all();
                     $data = '<div class="d-flex justify-content-center">
                                 <button data-bs-toggle="modal" data-bs-target="#showModal' . $row->id . '" class="btn btn-success me-2"><i class="fas fa-eye"></i></button>
                                 <button data-bs-toggle="modal" data-bs-target="#editModal' . $row->id . '" class="btn btn-info me-2"><i class="fas fa-edit"></i></button>
-                                <form onsubmit="submitForm(this, `delete`)" action="' . route('products.destroy', [$row->id]) . '" method="POST">
+                                <form onsubmit="submitForm(this, `delete`)" action="' . route('budgets.destroy', [$row->id]) . '" method="POST">
                                     <input type="hidden" name="_token" value="' . csrf_token() . '">
                                     <input name="_method" type="hidden" value="DELETE">
                                     <button class="btn btn-danger"><i class="fas fa-trash"></i></button>
@@ -58,7 +40,7 @@ class ProductController extends Controller
                             </div>';
 
                     // Update Modal
-                    $data .= '<form method="POST" onsubmit="submitForm(this, `update`)" action="' . route('products.update', [$row->id]) . '" class="modal fade text-start" id="editModal' . $row->id . '"
+                    $data .= '<form method="POST" onsubmit="submitForm(this, `update`)" action="' . route('budgets.update', [$row->id]) . '" class="modal fade text-start" id="editModal' . $row->id . '"
                                 tabindex="-1" aria-labelledby="modal" aria-hidden="true">
                                 <input type="hidden" name="_token" value="' . csrf_token() . '">
                                 <input name="_method" type="hidden" value="PUT">
@@ -70,10 +52,6 @@ class ProductController extends Controller
                                         </div>
                                         <div class="modal-body">
                                             <div class="form-group">
-                                                <label for="name">Name</label>
-                                                <input required type="text" id="name" name="name" value="' . $row->name . '" class="form-control">
-                                            </div>
-                                            <div class="form-group">
                                                 <label>Price</label>
                                                 <div class="input-group">
                                                     <span class="input-group-text">Rp.</span>
@@ -81,17 +59,16 @@ class ProductController extends Controller
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="pasword">Base Price</label>
+                                                <label for="pasword">Details</label>
                                                 <div class="input-group">
-                                                    <span class="input-group-text">Rp.</span>
-                                                    <input required type="number" id="base_price" value="' . $row->base_price . '" name="base_price" class="form-control">
+                                                    <input required type="textarea" id="detail" value="' . $row->detail . '" name="detail" class="form-control">
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="category">Category</label>
-                                                <select name="category_id" id="category" class="form-control" value="' . $row->category->name . '">' .
-                        $this->getCategoriesOptions($row, $categories)
-                        . '</select>
+                                                <label for="pasword">Date</label>
+                                                <div class="input-group">
+                                                    <input required type="date" id="date" value="' . $row->date . '" name="date" class="form-control">
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
@@ -113,29 +90,24 @@ class ProductController extends Controller
                                     </div>
                                     <div class="modal-body">
                                         <div class="form-group">
-                                            <label for="name">Name</label>
-                                            <input disabled type="text" id="name" name="name" value="' . $row->name . '" class="form-control">
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Price</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text">Rp.</span>
-                                                <input disabled type="number" name="price" value="' . $row->price . '" class="form-control">
+                                                <label>Price</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text">Rp.</span>
+                                                    <input required type="number" name="price" value="' . $row->price . '" class="form-control" disabled>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="pasword">Base Price</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text">Rp.</span>
-                                                <input disabled type="number" id="base_price" value="' . $row->base_price . '" name="base_price" class="form-control">
+                                            <div class="form-group">
+                                                <label for="pasword">Details</label>
+                                                <div class="input-group">
+                                                    <input required type="textarea" id="detail" value="' . $row->detail . '" name="detail" class="form-control" disabled>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="category">Category</label>
-                                            <select name="category_id" id="category" disabled class="form-control" value="' . $row->category->name . '">
-                                                    <option value="' . $row->category->id . '">' . $row->category->name . '</option>
-                                            </select>
-                                        </div>
+                                            <div class="form-group">
+                                                <label for="pasword">Date</label>
+                                                <div class="input-group">
+                                                    <input required type="date" id="date" value="' . $row->date . '" name="date" class="form-control" disabled>
+                                                </div>
+                                            </div>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -150,19 +122,16 @@ class ProductController extends Controller
                 ->make(true);
         }
 
-        return view('products.index', [
-            'categories' => $categories
-        ]);
+        return view('budgets.index');
     }
 
     public function store(Request $request)
     {
         try {
-            Product::create([
-                'name' => $request->name,
-                'base_price' => $request->base_price,
+            Budget::create([
+                'detail' => $request->detail,
                 'price' => $request->price,
-                'category_id' => $request->category_id
+                'date' => $request->date
             ]);
             return redirect()->back()->with('message', 'Data stored!')->with('status', 'success');
         } catch (Exception $e) {
@@ -173,11 +142,10 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            Product::find($id)->update([
-                'name' => $request->name,
-                'base_price' => $request->base_price,
+            Budget::find($id)->update([
+                'detail' => $request->detail,
                 'price' => $request->price,
-                'category_id' => $request->category_id
+                'date' => $request->date
             ]);
             return redirect()->back()->with('message', 'Data updated!')->with('status', 'success');
         } catch (Exception $e) {
@@ -188,7 +156,7 @@ class ProductController extends Controller
     public function destroy($id)
     {
         try {
-            Product::find($id)->update(['is_deleted' => 1]);
+            Budget::find($id)->delete();
             return redirect()->back()->with('message', 'Data deleted!')->with('status', 'success');
         } catch (Exception $e) {
             dd($e->getMessage());
