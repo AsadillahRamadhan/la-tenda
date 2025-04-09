@@ -59,10 +59,19 @@ class TransactionController extends Controller
             $transaction->save();
 
 
-            return redirect()->back()->with('message', 'Order Success!')->with('status', 'success');
+            return redirect()->route('receipt')->with('receipt', $transaction);
         } catch (Exception $e) {
             return redirect()->back()->with('message', $e->getMessage())->with('status', 'error');
         }
-        dd($request);
+    }
+
+    public function receipt(Request $request)
+    {
+        $transaction = Transaction::orderBy('id', 'DESC')->first();
+        $items = ProductTransaction::with('product')->where('transaction_id', $transaction->id)->get();
+        return view('transactions.receipt', [
+            'transaction' => $transaction,
+            'items' => $items
+        ]);
     }
 }

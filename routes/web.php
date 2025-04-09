@@ -29,5 +29,6 @@ Route::middleware(IsAuthenticate::class)->group(function () {
     Route::get('/', [TransactionController::class, 'index'])->name('transaction');
     Route::post('/store_transaction', [TransactionController::class, 'store'])->name('transaction.store');
     Route::get('logout', [LoginController::class, 'logout'])->name('get_logout');
+    Route::get('receipt', [TransactionController::class, 'receipt'])->name('receipt');
 });
 Auth::routes();
